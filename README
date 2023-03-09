@@ -1,0 +1,64 @@
+QUIZ GENERATOR
+
+The project simulates a simple application where users can login using basic credentials (username and password) after
+they first "registered" in the associated database, here represented by a series of CSV format files persistently
+storing all data relevant for the application at all times.
+
+The application is based on command-line arguments added when running the project (Tema1 class), arguments which
+trigger certain action within the system: user, question and quiz creation, finding questions or quizzes based on text
+or name, submitting solutions to quizzes, showing information about questions, quizzes and solutions, deleting quizzes.
+
+The Tema1.main method initialises a "database", an object containing arrays for all the objects created in the application:
+users (each with an array of solutions), questions and quizzes, all written in a corresponding file at creation ("Users.csv",
+"Questions.csv", "Quizzes.csv", "Solutions.csv"). For each new run all the arrays are repopulated by reading the files
+line by line. Then the arguments are interpreted using the Command class, that deals with all possible commands by triggering
+their specific responses, containing methods for checking the validity of each string of arguments.
+
+USER CLASS: -> represents the user entity within the application, defined by a username, password, an array of solutions
+               to quizzes and the number of these solutions;
+            -> contains methods for creating new users from given command-line arguments, comparing new users to those
+               already in the current database, creating, scoring and adding new solutions to quizzes, verifying
+               login validity, and printing user specific information.
+
+QUESTION CLASS: -> represents the question entity within the application, defined by an ID (assigned using a static variable);
+                -> contains methods for creating new questions, comparing new questions to questions in the database,
+                   checking validity of certain question-related parameters, calculating scores based on lists of chosen
+                   answers, finding questions with certain properties and listing information about questions in the system.
+
+ANSWER CLASS: -> represents answer entities in the system, defined by an ID, a text and a boolean value indicating
+                 whether it is correct or not;
+              -> contains method for verifying if a certain answer (namely its ID) is marked as chosen in an ID array.
+
+QUIZ CLASS -> represents quiz entities in the system, defined by ID, name, and a question array;
+           -> contains method for creating new quizzes, comparing new quizzes with the ones already in the database,
+              validating and/or finding quizzes with certain properties and parameters, checking if a quiz was submitted
+              by a given user, printing quiz related information and deleting quizzes from the database.
+
+SOLVEDQUIZ CLASS: -> represents a solution submitted by a user within the application; it is defined by a Quiz field
+                     indicating the quiz the solution is for, and a score for that quiz associated with that solution;
+                  -> contains method for removing all solutions for a given quiz from the database.
+
+All actions (besides user creation) first need a successful login (valid user credentials), verified by the User.login
+method.
+
+All the main classes (User, Question, Quiz, SolvedQuiz) provide methods for clearing their respective information from
+the database when the command "-cleanup-all" is invoked. At cleanup, all files created during the application's runs are
+deleted.
+
+More details found in the JavaDoc comments throughout the code.
+
+
+OTHER LIMIT CASES THAT WERE NOT DEALT WITH:
+
+-> arguments for the commands are given in a random order;
+-> only the first part of an argument is provided (its name, beginning with "-"), and not its actual content (example:
+   -create-user -u -p 'test');
+-> reversely, only the content of an argument is provided, without the type flag beginning with "-" (example:
+   -create-user 'test' -p 'test');
+-> there is no type specified for a new question;
+-> there is no answer marked as correct for a new question;
+-> no name indicated for a new quiz;
+-> no question IDs indicated for a new quiz;
+-> more than one answer chosen for a single choice question for "-submit-quizz";
+-> no answer provided for a certain question in a quiz for "submit-quizz";
+-> user attempts deletion of a quiz that was not created by them;
